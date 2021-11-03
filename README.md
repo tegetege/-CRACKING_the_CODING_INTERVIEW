@@ -1,1 +1,2 @@
-# -CRACKING_the_CODING_INTERVIEW
+# CRACKING_the_CODING_INTERVIEW
+[CRACKING_the_CODING_INTERVIEW](https://www.crackingthecodinginterview.com/)の本を読み進めていく中で作成したコードなどを共有のために保存するリポジトリです
