@@ -12,7 +12,7 @@ public class Piece {
         for (int i = 0; i < edgeList.length; i++) {
             Edge edge = edgeList[i];
             edge.setParentPiece(this);
-            edges.put(orientations[i], edge)
+            edges.put(orientations[i], edge) // 向きとedgeを登録する
         }
     }
 

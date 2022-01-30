@@ -44,7 +44,7 @@ public class Puzzle {
         return location == 0 || location == size - 1;
     }
 
-    /* ピースのリストを指定して、ピースに一致するedgeがあるかどうかを確認する */
+    /* ピースのリストから、ピースに一致するedgeがあるかどうかを確認する */
     private Edge getMatchingEdge(Edge targetEdge, LinkedList<Piece> pieces) {
         for (Piece piece : pieces) {
             Edge matchingEdge = piece.getMatchingEdge(targetEdge);
@@ -76,17 +76,19 @@ public class Puzzle {
     /* piecesToSearch で一致するピースを見つけて、rowとcolumnに挿入する */
     private boolean fitNextEdge(LinkedList<Piece> piecesToSearch, int row, int column) {
         if(row == 0 && column == 0) {
+            // 左上のコーナーピースを発見!!
             Piece p = piecesToSearch.remove();
             orientTopLeftCorner(p);
             solution[0][0] = p;
         } else {
             /* 右側のedgeと一致するリストを取得する */
-            Piece pieceToMatch = column == 0 ? solution[row - 1][0] : solution[row][column - 1];
+            Piece pieceToMatch = column == 0 ? solution[row - 1][0] : solution[row][column - 1]; // 一番左の場合を考慮
             Orientation orientationToMatch = column == 0 ? Orientation.BOTTOM : Orientation.RIGHT;
             Edge edgeToMatch = pieceToMatch.getEdgeWithOrientation(orientationToMatch);
 
+            // 探すべきピースのグループと、マッチするedgeを渡して、探す
             Edge edge = getMatchingEdge(edgeToMatch, piecesToSearch);
-            if(edge == null) return false; // can't solve
+            if(edge == null) return false; // マッチするedgeが無い場合
 
             Orientation orientation = orientationToMatch.getOpposite();
             setEdgeInSolution(piecesToSearch, edge, row, column, orientation);
@@ -94,6 +96,7 @@ public class Puzzle {
         return true;
     }
 
+    // mainから呼び出されるメソッド
     public boolean solve() {
         /* Group pieces. */
         LinkedList<Piece> cornerPieces = new LinkedList<Piece>();
@@ -104,7 +107,10 @@ public class Puzzle {
         solution = new Piece[size][size];
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
+                // 探すべきピースのグループを取得する
                 LinkedList<Piece> piecesToSearch = getPieceListToSearch(cornerPieces, borderPieces, insidePieces, row, column);
+
+                // マッチするピースが見つからない場合はfalseを返す
                 if (!fitNextEdge(piecesToSearch, row, column)) {
                     return false;
                 }
